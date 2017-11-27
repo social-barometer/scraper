@@ -1,0 +1,23 @@
+{
+  "name": "scraper",
+  "version": "1.0.0",
+  "description": "Scrapes internet for data to be displayed in the app",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/social-barometer/scraper.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/social-barometer/scraper/issues"
+  },
+  "homepage": "https://github.com/social-barometer/scraper#readme",
+  "dependencies": {
+    "jayson": "^2.0.4"
+  }
+}
