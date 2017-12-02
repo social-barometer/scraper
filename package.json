@@ -23,5 +23,6 @@
     "request-promise-native": "^1.0.5",
     "require": "^2.4.20",
     "sentiment": "^4.1.0"
-  }
+  },
+  "devDependencies": {}
 }

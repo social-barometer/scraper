@@ -6,13 +6,11 @@ const headers = {
 
 graph.setAccessToken(token)
 
-
 /**
  * Returns a list of events from facebook.
  *
  * @param {String} eventName - Event name or location
  * @returns {Promise.<JSON|Error>} – JSON list of events 
- *
  */
 module.exports.searchEvents = (eventName) => new Promise((resolve, reject) => {
   graph.search({
@@ -22,22 +20,3 @@ module.exports.searchEvents = (eventName) => new Promise((resolve, reject) => {
     err ? reject(err) : resolve(res.data) 
   })
 })
-
-
-
-// graph.search({
-//   q: "oulu",
-//   type: "event"
-// }, (err, res) => {
-//   console.log(res)
-
-//   if (!res.data.length) {
-//     console.log("tuff luck")
-//     return
-//   }
-
-//   graph.get(`${res.data[0].id}/feed`, (err, res) => {
-//     console.log("fing")
-//     console.log(res)
-//   })  
-// })
