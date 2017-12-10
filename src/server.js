@@ -12,7 +12,7 @@ module.exports = jayson.server({
       const events = await facebook.searchEvents(args[0])
       cb(null, events)
     } catch(err) {
-      throw err
+      cb(err)
     }
   },
 })
