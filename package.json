@@ -23,7 +23,8 @@
     "jayson": "^2.0.4",
     "request-promise-native": "^1.0.5",
     "require": "^2.4.20",
-    "sentiment": "^4.1.0"
+    "sentiment": "^4.1.0",
+    "watson-developer-cloud": "^3.0.3"
   },
   "devDependencies": {
     "blue-tape": "^1.0.0",
