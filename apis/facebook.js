@@ -9,7 +9,6 @@ const graph = require('fbgraph')
  */
 
 const searchEvents = (accessToken, eventName) => {
-  console.log("facebook called")
   return new Promise((resolve, reject) => {
       const headers = {
         "Auhtorization": `Bearer ${accessToken}`,

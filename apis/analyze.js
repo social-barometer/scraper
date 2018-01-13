@@ -1,5 +1,5 @@
-const user = require('../secrets/secrets.json').NLUUsername
-const pswd = require('../secrets/secrets.json').NLUPassword
+const user = require('../secrets/secrets.json').IBM.NLUUsername
+const pswd = require('../secrets/secrets.json').IBM.NLUPassword
 const NLUV1 = require('watson-developer-cloud/natural-language-understanding/v1.js')
 
 const nlu = new NLUV1({

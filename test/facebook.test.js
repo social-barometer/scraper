@@ -1,5 +1,5 @@
 const test = require('blue-tape')
-const facebook = require('../src/facebook')
+const facebook = require('../apis/facebook')
 const authToken = require('../secrets/secrets.json').FBAccessToken
 
 test('facebook.searchEvents returns an JSON array.', async (t) => {

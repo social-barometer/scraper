@@ -1,6 +1,5 @@
 const jayson = require('jayson')
-const getSentiment = require('./getSentiment')
-const facebook = require('./facebook')
+const facebook = require('../apis/facebook')
 const Agenda = require('agenda')
 const { MongoClient } = require('mongodb')
 const CONFIG = require('../config.json')
@@ -12,9 +11,6 @@ async function startServer() {
   const agenda = new Agenda().mongo(agendaDB, CONFIG.agenda.collection)
 
   return jayson.server({
-    getSentiment: (args, cb) => {
-      cb(null, getSentiment(args[0]))
-    },
     searchEvents: async (args, cb) => {
       try {
         const events = await facebook.searchEvents(args[0])
