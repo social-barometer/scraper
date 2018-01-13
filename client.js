@@ -1,5 +1,5 @@
 const jayson = require('jayson')
-const FBtoken = require('./secrets/secrets.json').FBAccessToken
+const FBtoken = require('./secrets/secrets.json').facebook.accessToken
 
 const client = jayson.client.http({
   port: 3131
