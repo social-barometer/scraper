@@ -1,3 +1,19 @@
-const server = require('./src/server')
+const startServer = require('./src/server')
+const cp = require('child_process')
 
-server.http().listen(3131)
+
+// Start the scheduler as child process
+const scheduler = cp.fork('./src/scheduler.js')
+scheduler.on('message', msg => {
+  console.log(msg)
+})
+
+startServer.then(server => {
+  server.http().listen(3131)
+  console.log('listening on 3131')
+})
+
+process.on('SIGINT', () => {
+  scheduler.kill('SIGINT')
+  process.exit()
+})
