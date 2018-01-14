@@ -13,7 +13,7 @@ async function start() {
       token: FBToken,
       keyword: 'oulu',
     })
-    console.log(job)
+    // console.log(job)
   } catch(err) {
     cb(err)
   }
