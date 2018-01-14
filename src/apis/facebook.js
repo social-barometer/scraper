@@ -63,17 +63,15 @@ const getComments = (accessToken, ID) => {
  * @param {Number} [radius] – Search radius in meter
  * @returns {Promise.<Array|Error>}
  */
-const getEventsByGeolocation = async (accessToken, geolocation, radius = 1000) => {
+const getEventsByGeolocation = (accessToken, geolocation, radius = 1000) => {
   
   const {lat, lng} = geolocation
-  return await es.search({
+  return es.search({
     lat: lat,
     lng: lng,
     distance: radius,
     accessToken: accessToken,
   })
-
-
 }
 
 module.exports.searchEvents = searchEvents
