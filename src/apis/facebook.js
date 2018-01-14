@@ -1,4 +1,6 @@
 const graph = require('fbgraph')
+const EventSearch = require('facebook-events-by-location-core')
+const es = new EventSearch()
 
 /**
  * Returns a list of events from facebook.
@@ -9,9 +11,6 @@ const graph = require('fbgraph')
  */
 const searchEvents = (accessToken, query) => {
   return new Promise((resolve, reject) => {
-      const headers = {
-        "Auhtorization": `Bearer ${accessToken}`,
-      }
 
       if (!accessToken || !query) {
         reject(new TypeError('Invalid arguments.'))
@@ -38,10 +37,6 @@ const searchEvents = (accessToken, query) => {
 const getComments = (accessToken, ID) => {
   return new Promise((resolve, reject) => {
 
-    const headers = {
-      "Auhtorization": `Bearer ${accessToken}`,
-    }
-
     if (!accessToken || !ID) {
       reject(new TypeError('Invalid arguments.'))
     }
@@ -65,20 +60,22 @@ const getComments = (accessToken, ID) => {
  *
  * @param {String} accessToken – Facebook acces token for auth
  * @param {Object.<geolocation>} geolocation – Location for the search
+ * @param {Number} [radius] – Search radius in meter
  * @returns {Promise.<Array|Error>}
  */
-const getEventsByGeolocation = (accessToken, geolocation) => {
-  return new Promise((resolve, reject) => {
-    const headers = {
-      "Auhtorization": `Bearer ${accessToken}`,
-    }
-
-    if (!accessToken || !ID) {
-      reject(new TypeError('Invalid arguments.'))
-    }
+const getEventsByGeolocation = async (accessToken, geolocation, radius = 1000) => {
+  
+  const {lat, lng} = geolocation
+  return await es.search({
+    lat: lat,
+    lng: lng,
+    distance: radius,
+    accessToken: accessToken,
   })
-}
 
+
+}
 
 module.exports.searchEvents = searchEvents
 module.exports.getComments = getComments
+module.exports.getEventsByGeolocation = getEventsByGeolocation
