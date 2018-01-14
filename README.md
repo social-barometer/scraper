@@ -5,13 +5,16 @@ Scrapes internet for data to be displayed in the app
 `npm install`
 
 ## Usage
-`node index`
+`npm start`
 
 ## Testing
 `npm test`
 
 ## Code Coverage
 `npm run coverage`
+
+## Job dashboard
+`npm run agendash`
 
 ### Example
 Example client implementation in `client.js`

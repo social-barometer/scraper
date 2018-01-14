@@ -10,16 +10,8 @@ const nlu = new NLUV1({
 
 const params = {
   features: {
-    entities: {
-      emotion: true,
-      sentiment: true,
-      limit: 2
-    },
-    keywords: {
-      emotion: true,
-      sentiment: true,
-      limit: 2
-    }
+    sentiment: {},
+    emotion: {}
   }
 }
 

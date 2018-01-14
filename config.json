@@ -2,6 +2,7 @@
   "agenda": {
     "url": "mongodb://localhost:27017/",
     "collection": "jobs",
-    "freq": "3 seconds"
+    "freq": "3 seconds",
+    "db": "agenda"
   }
 }
