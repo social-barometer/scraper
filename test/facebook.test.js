@@ -1,8 +1,10 @@
 const test = require('blue-tape')
-const facebook = require('../apis/facebook')
-const authToken = require('../secrets/secrets.json').FBAccessToken
+const facebook = require('../src/apis/facebook')
+const authToken = require('../secrets/secrets.json').facebook.accessToken
 
-test('facebook.searchEvents returns an JSON array.', async (t) => {
+
+// Tests for facebook.searchEvents
+test('facebook.searchEvents returns an array.', async (t) => {
   const resp = await facebook.searchEvents(authToken, 'oulu')
   t.true(Array.isArray(resp))
 })
@@ -28,5 +30,40 @@ test(
   (t) => {
     t.shouldFail(facebook.searchEvents('derp', ''))
     t.end()
+  }
+)
+
+// Tests for facebook.getComments
+test(
+  'facebook.getComments should return an array.',
+  async (t) => {
+   const resp = await facebook.getComments(authToken, '1458780194187500')
+   t.true(Array.isArray(resp))
+  }
+)
+
+test(
+  'facebook.getComments should fail if no arguments passed.',
+  (t) => {
+    t.shouldFail(facebook.getComments())
+    t.end()
+  }
+)
+
+// Tests for facebook.getEventsByGeolocation
+const location = {lat: 65.02761149999999, lng: 25.4667702}
+test(
+  'facebook.getEventsByGeolocation should fail if no arguments passed.',
+  (t) => {
+    t.shouldFail(facebook.getEventsByGeolocation())
+    t.end()
+  }
+)
+
+test(
+  'facebook.getEventsByGeolocation should return an array.',
+  async (t) => {
+    const resp = await facebook.getEventsByGeolocation(authToken, location)
+    t.true(Array.isArray(resp))
   }
 )

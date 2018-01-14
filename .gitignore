@@ -3,3 +3,4 @@ secrets
 .DS_Store
 coverage
 dev.js
+docs

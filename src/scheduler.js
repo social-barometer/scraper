@@ -1,7 +1,7 @@
 const Agenda = require('agenda')
 const { MongoClient } = require('mongodb')
 const CONFIG = require('../config.json').agenda
-const searchFBEvents = require('../jobs/searchFBEvents')
+const searchFBEvents = require('../src/jobs/searchFBEvents')
 
 async function run() {
   const conn = await MongoClient.connect(CONFIG.url)
