@@ -17,8 +17,9 @@ const params = {
 
 module.exports = (text) => new Promise((resolve, reject) => {
   nlu.analyze(Object.assign(params, {text: text}), (err, res) => {
-    if (err) reject(err)
-    else
-      resolve(JSON.stringify(res, null, 2))
+    err ? rejecte(err) : resolve(JSON.stringify(res, null, 2))
+    //if (err) reject(err)
+    //else
+    //  resolve(JSON.stringify(res, null, 2))
   })
 })
