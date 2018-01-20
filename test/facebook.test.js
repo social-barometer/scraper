@@ -33,19 +33,19 @@ test(
   }
 )
 
-// Tests for facebook.getComments
+// Tests for facebook.getFeed
 test(
-  'facebook.getComments should return an array.',
+  'facebook.getFeed should return an array.',
   async (t) => {
-   const resp = await facebook.getComments(authToken, '1458780194187500')
+   const resp = await facebook.getFeed(authToken, '1458780194187500')
    t.true(Array.isArray(resp))
   }
 )
 
 test(
-  'facebook.getComments should fail if no arguments passed.',
+  'facebook.getFeed should fail if no arguments passed.',
   (t) => {
-    t.shouldFail(facebook.getComments())
+    t.shouldFail(facebook.getFeed())
     t.end()
   }
 )
