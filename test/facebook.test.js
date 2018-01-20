@@ -34,13 +34,13 @@ test(
 )
 
 // Tests for facebook.getFeed
-test(
-  'facebook.getFeed should return an array.',
-  async (t) => {
-   const resp = await facebook.getFeed(authToken, '1458780194187500')
-   t.true(Array.isArray(resp))
-  }
-)
+// test(
+//   'facebook.getFeed should return an array.',
+//   async (t) => {
+//    const resp = await facebook.getFeed(authToken, '1458780194187500')
+//    t.true(Array.isArray(resp))
+//   }
+// )
 
 test(
   'facebook.getFeed should fail if no arguments passed.',
@@ -60,10 +60,10 @@ test(
   }
 )
 
-test(
-  'facebook.getEventsByGeolocation should return an array.',
-  async (t) => {
-    const resp = await facebook.getEventsByGeolocation(authToken, location)
-    t.true(Array.isArray(resp))
-  }
-)
+// test(
+//   'facebook.getEventsByGeolocation should return an array.',
+//   async (t) => {
+//     const resp = await facebook.getEventsByGeolocation(authToken, location)
+//     t.true(Array.isArray(resp))
+//   }
+// )

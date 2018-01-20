@@ -1,5 +1,5 @@
 const Twitter = require('twitter')
-const creds = require('../secrets/secrets.json').twitter
+const creds = require('../../secrets/secrets.json').twitter
 
 /**
  * Searches Twitter for tweets
@@ -17,7 +17,7 @@ const creds = require('../secrets/secrets.json').twitter
  * @param {Object} params – Search parameters 
  * @returns {Promise.<Array>} – List of tweets
  */
-const search = (accessToken, accessTokenSecret, params) => {
+const search = async (accessToken, accessTokenSecret, params) => {
   const client = new Twitter({
     consumer_key: creds.consumerKey,
     consumer_secret: creds.consumerSecret,
@@ -25,21 +25,9 @@ const search = (accessToken, accessTokenSecret, params) => {
     access_token_secret: accessTokenSecret
   })
 
-  return client.get('search/tweets', params)
-    .then((tweets) => {
-      console.log(tweets)
-      return tweets
-      // Save to DB
-    })
-    .catch((err) => {
-      console.log(err)
-    })
+   const resp = await client.get('search/tweets', params)
+   return resp.statuses
 }
-
-// search(creds.accessToken, creds.accessTokenSecret, {
-//   q: 'Nickelback',
-//   count: 2
-// })
 
 /**
  * Gets tweets by their ID
@@ -55,17 +43,8 @@ const get = (accessToken, accessTokenSecret, id) => {
     access_token_secret: accessTokenSecret
   })
 
-  client.get('statuses/show/', {id: id})
-    .then((tweets) => {
-      console.log(tweets)
-    })
-    .catch((err) => {
-      console.log(err)
-    })
-
+  return client.get('statuses/show/', {id: id})
 }
-
-// get(creds.accessToken, creds.accessTokenSecret, '223115412')
 
 module.exports.search = search
 module.exports.get = get

@@ -57,7 +57,6 @@ const searchEvents = (accessToken, query) => {
  * @returns {Promise.<Array|Error>} – List of posts
  */
 const getFeed = async (accessToken, ID) => {
-
   const makePaginator = (accessToken, direction) => async (query, posts, paginator) => {
     try {
       const resp = await facebookGet(accessToken, query)
