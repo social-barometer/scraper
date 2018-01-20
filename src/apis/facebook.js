@@ -57,11 +57,16 @@ const searchEvents = (accessToken, query) => {
  * @returns {Promise.<Array|Error>} – List of posts
  */
 const getFeed = async (accessToken, ID) => {
-  const paginate = async (query, posts) => {
+
+  const makePaginator = (accessToken, direction) => async (query, posts, paginator) => {
     try {
       const resp = await facebookGet(accessToken, query)
-      if (resp.paging && resp.paging.next) {
-        return await paginate(resp.paging.next, [...posts, ...resp.data])
+      if (resp.paging && resp.paging[direction]) {
+        return await paginator(
+          resp.paging[direction],
+          [...posts, ...resp.data],
+          paginator
+        )
       } else {
         return [...posts, ...resp.data]
       }
@@ -69,8 +74,24 @@ const getFeed = async (accessToken, ID) => {
       throw new Error(err)
     }
   }
-  return await paginate(`${ID}/feed`, [])
-  // TODO: Add backwards crawling
+
+  try {
+    const resp = await facebookGet(accessToken, `${ID}/feed`)
+    if (resp.paging) {
+      const next = resp.paging.next
+      const prev = resp.paging.previous
+      const nextPaginator = next && makePaginator(accessToken, 'next')
+      const prevPaginator = next && makePaginator(accessToken, 'previous')
+      const nexts = (next && await nextPaginator(next, [], nextPaginator)) || []
+      const prevs = (prev && await prevPaginator(prev, [], prevPaginator)) || []
+
+      return [...prevs, ...resp.data, ...nexts]
+    } else {
+      return resp.data
+    }
+  } catch(err) {
+    throw new Error(err)
+  }
 }
 
 /**
@@ -87,15 +108,19 @@ const getFeed = async (accessToken, ID) => {
  * @param {Number} [radius] – Search radius in meter
  * @returns {Promise.<Array|Error>}
  */
-const getEventsByGeolocation = (accessToken, geolocation, radius = 1000) => {
-  
-  const {lat, lng} = geolocation
-  return es.search({
-    lat: lat,
-    lng: lng,
-    distance: radius,
-    accessToken: accessToken,
-  })
+const getEventsByGeolocation = async (accessToken, geolocation, radius = 1000) => {
+  try {
+    const {lat, lng} = geolocation
+    const resp = await es.search({
+      lat: lat,
+      lng: lng,
+      distance: radius,
+      accessToken: accessToken,
+    })
+    return resp.events
+  } catch(err) {
+    throw new Error(err)
+  }
 }
 
 module.exports.searchEvents = searchEvents
