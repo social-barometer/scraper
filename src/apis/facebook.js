@@ -54,9 +54,10 @@ const searchEvents = (accessToken, query) => {
  *
  * @param {String} accessToken – Facebook acces token for auth
  * @param {String} ID – ID of a facebook page or event
+ * @param {Number|String} [since] – Unix timestamp, search posts posted after this time
  * @returns {Promise.<Array|Error>} – List of posts
  */
-const getFeed = async (accessToken, ID) => {
+const getFeed = async (accessToken, ID, since) => {
   const makePaginator = (accessToken, direction) => async (query, posts, paginator) => {
     try {
       const resp = await facebookGet(accessToken, query)
@@ -70,12 +71,13 @@ const getFeed = async (accessToken, ID) => {
         return [...posts, ...resp.data]
       }
     } catch(err) {
-      throw new Error(err)
+      throw err
     }
   }
 
   try {
     const resp = await facebookGet(accessToken, `${ID}/feed`)
+    
     if (resp.paging) {
       const next = resp.paging.next
       const prev = resp.paging.previous
@@ -83,13 +85,17 @@ const getFeed = async (accessToken, ID) => {
       const prevPaginator = next && makePaginator(accessToken, 'previous')
       const nexts = (next && await nextPaginator(next, [], nextPaginator)) || []
       const prevs = (prev && await prevPaginator(prev, [], prevPaginator)) || []
+      const posts = [...prevs, ...resp.data, ...nexts]
+      
+      return since
+        ? posts.filter(p => new Date(p.updated_time).getTime() >= since)
+        : posts
 
-      return [...prevs, ...resp.data, ...nexts]
     } else {
       return resp.data
     }
   } catch(err) {
-    throw new Error(err)
+    throw err
   }
 }
 
