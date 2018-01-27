@@ -26,6 +26,7 @@
     "agendash": "^0.4.0",
     "facebook-events-by-location-core": "^0.9.1",
     "fbgraph": "^1.4.1",
+    "mariasql": "^0.2.6",
     "mongodb": "^3.0.0-rc0",
     "request-promise-native": "^1.0.5",
     "require": "^2.4.20",
