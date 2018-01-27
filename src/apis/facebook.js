@@ -58,6 +58,11 @@ const searchEvents = (accessToken, query) => {
  * @returns {Promise.<Array|Error>} – List of posts
  */
 const getFeed = async (accessToken, ID, since) => {
+
+  if (!accessToken || !ID) {
+    throw new Error('Invalid Arguments!')
+  }
+
   const makePaginator = (accessToken, direction) => async (query, posts, paginator) => {
     try {
       const resp = await facebookGet(accessToken, query)
@@ -114,6 +119,11 @@ const getFeed = async (accessToken, ID, since) => {
  * @returns {Promise.<Array|Error>}
  */
 const getEventsByGeolocation = async (accessToken, geolocation, radius = 1000) => {
+  
+  if (!accessToken || !geolocation){
+    throw new Error('Invalid arguments!')
+  }
+  
   try {
     const {lat, lng} = geolocation
     const resp = await es.search({

@@ -4,10 +4,10 @@ const authToken = require('../secrets/secrets.json').facebook.accessToken
 
 
 // Tests for facebook.searchEvents
-test('facebook.searchEvents returns an array.', async (t) => {
-  const resp = await facebook.searchEvents(authToken, 'oulu')
-  t.true(Array.isArray(resp))
-})
+// test('facebook.searchEvents returns an array.', async (t) => {
+//   const resp = await facebook.searchEvents(authToken, 'oulu')
+//   t.true(Array.isArray(resp))
+// })
 
 test(
   'facebook.searchEvents should fail if no arguments passed.',
