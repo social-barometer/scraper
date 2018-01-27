@@ -15,9 +15,10 @@ const creds = require('../../secrets/secrets.json').twitter
  * @param {String} accessToken – Twitter user access token
  * @param {String} accessTokenSecret  Twitter user access token secret
  * @param {Object} params – Search parameters 
+ * @param {String|Number} [since] – Unix timestamp, get tweets posted after this
  * @returns {Promise.<Array>} – List of tweets
  */
-const search = async (accessToken, accessTokenSecret, params) => {
+const search = async (accessToken, accessTokenSecret, params, since) => {
   const client = new Twitter({
     consumer_key: creds.consumerKey,
     consumer_secret: creds.consumerSecret,
@@ -26,7 +27,12 @@ const search = async (accessToken, accessTokenSecret, params) => {
   })
 
    const resp = await client.get('search/tweets', params)
-   return resp.statuses
+
+  console.log(since)
+
+  return since
+    ? resp.statuses.filter(t => new Date(t.created_at) >= since)
+    : resp.statuses
 }
 
 /**
