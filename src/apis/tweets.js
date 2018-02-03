@@ -26,13 +26,18 @@ const search = async (accessToken, accessTokenSecret, params, since) => {
     access_token_secret: accessTokenSecret
   })
 
-   const resp = await client.get('search/tweets', params)
-
-  console.log(since)
-
-  return since
+  const resp = await client.get('search/tweets', params)
+  
+  const tweets = since
     ? resp.statuses.filter(t => new Date(t.created_at) >= since)
     : resp.statuses
+
+  return tweets.map(t => ({
+    "post_id": t.id_str,
+    "content": t.text,
+    "source": "twitter",
+    "created_at": new Date(t.created_at).getTime(),
+  }))
 }
 
 /**
