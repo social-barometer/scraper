@@ -3,7 +3,7 @@ Scrapes internet for data to be displayed in the app
 
 ## Installation
 1) `npm install`
-2) Create a secrets folder with secrets.json file `mkdir secrets && touch secrets.json`
+2) Create a secrets folder with secrets.json file `mkdir secrets && touch secrets/secrets.json`
 3) Add the following secrets to the created json
 ```json
 {
@@ -17,9 +17,6 @@ Scrapes internet for data to be displayed in the app
       "accessToken": "",
       "accessTokenSecret": ""
     }
-  },
-  "instagram": {
-    "clientID": ""
   },
   "IBM": {
     "NLUUsername": "",
