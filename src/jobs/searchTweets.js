@@ -28,9 +28,9 @@
     const posts = await tweets.search(
      accessToken,
      accessTokenSecret,
-     { q: query }
+     { q: query, count: 100 }
     )
-    
+
     const analyzed = posts.map(async p => {
       let analysis
       try {
@@ -50,6 +50,7 @@
       }
       return Object.assign(p, analysis)
     })
+
     return Promise.all(analyzed)
     // TODO: Save to db
  } 
