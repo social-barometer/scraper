@@ -11,9 +11,11 @@ const Koa = require('Koa')
 
 const app = new Koa()
 
+const secrets = require('./secrets/secrets.json')
+
 const searchTweets = require('./src/jobs/searchTweets')
-const accessToken = "477661135-TLDZiqyYJ7nHCDqFhGWSnHnyCFjMFCgv6Z1u7aVi"
-const accessTokenSecret = "58ThMzudKBHO0xOVMtKVr8IVHIohs8oRhLtB9ty1E53UR"
+const accessToken = secrets.twitter.accessToken
+const accessTokenSecret = secrets.twitter.accessTokenSecret
 
 app.use(async ctx => {
   const {
