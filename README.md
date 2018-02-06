@@ -2,7 +2,31 @@
 Scrapes internet for data to be displayed in the app
 
 ## Installation
-`npm install`
+1) `npm install`
+2) Create a secrets folder with secrets.json file `mkdir secrets && touch secrets.json`
+3) Add the following secrets to the created json
+```json
+{
+  "facebook": {
+    "accessToken": ""
+  },
+  "twitter": {
+    "consumerKey": "",
+    "consumerSecret": "",
+    "user": {
+      "accessToken": "",
+      "accessTokenSecret": ""
+    }
+  },
+  "instagram": {
+    "clientID": ""
+  },
+  "IBM": {
+    "NLUUsername": "",
+    "NLUPassword": "" 
+  }
+}
+```
 
 ## Usage
 `npm start`
