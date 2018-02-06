@@ -15,7 +15,7 @@ const creds = require('../../secrets/secrets.json').twitter
  * @param {String} accessToken – Twitter user access token
  * @param {String} accessTokenSecret  Twitter user access token secret
  * @param {Object} params – Search parameters 
- * @param {String|Number} [since] – Unix timestamp, get tweets posted after this
+ * @param {String|Number} [since] – Unix timestamp, get tweets posted after this time
  * @returns {Promise.<Array>} – List of tweets
  */
 const search = async (accessToken, accessTokenSecret, params, since) => {
@@ -43,6 +43,8 @@ const search = async (accessToken, accessTokenSecret, params, since) => {
 /**
  * Gets tweets by their ID
  *
+ * @param {String} accessToken – Twitter user access token
+ * @param {String} accessTokenSecret  Twitter user access token secret
  * @param {String} id – The ID of a tweet
  * @returns {Promise.<Object>} – The tweet itself 
  */
