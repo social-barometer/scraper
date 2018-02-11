@@ -35,7 +35,6 @@ const params = {
  */
 module.exports = (text) =>
   new Promise((resolve, reject) => {
-    console.log('analyzing')
     nlu.analyze(Object.assign(params, {text: text}), (err, res) => {
       err
         ? reject(err)

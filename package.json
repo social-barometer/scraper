@@ -26,6 +26,7 @@
     "agendash": "^0.4.0",
     "facebook-events-by-location-core": "^0.9.1",
     "fbgraph": "^1.4.1",
+    "firebase-admin": "^5.8.2",
     "geolib": "^2.0.24",
     "koa": "^2.4.1",
     "mariasql": "^0.2.6",

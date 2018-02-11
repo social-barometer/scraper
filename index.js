@@ -1,42 +1,64 @@
-// const scheduler = require('./src/scheduler')
+const { loadDB } = require('./src/firebase')
+const getTwitterAnalysis = require('./src/jobs/getTwitterAnalysis')
 
-// scheduler.run()
-//   .catch(err => {
-//     console.error(err)
-//     process.exit(-1)
-//   })
-
-const qs = require('querystring')
-const Koa = require('Koa')
-
-const app = new Koa()
-
-const secrets = require('./secrets/secrets.json')
-
-const searchTweets = require('./src/jobs/searchTweets')
-const accessToken = secrets.twitter.accessToken
-const accessTokenSecret = secrets.twitter.accessTokenSecret
-
-app.use(async ctx => {
-  const {
-    user,
-    keywords,
-    since
-  } = qs.parse(ctx.request.querystring)
-  try {
-    const tweets = await searchTweets({
-      accessToken,
-      accessTokenSecret,
-      creator_id: user,
-      query: keywords,
-      since
-    })
-    ctx.body = JSON.stringify(tweets, null, 2)
-  } catch(e) {
-    console.log(e)
-  }
-  
+const sleep = (seconds) => new Promise(resolve => {
+  setTimeout(() => resolve(), seconds * 1000)
 })
 
-console.log('Listening to 3001')
-app.listen(3001)
+const scrape =  async (dashboards, db) => {
+  // Loop over them and find scrape tweets
+  return Promise.all(Object.keys(dashboards).map(async d => {
+    const values = dashboards[d]
+    try {
+    // if (Date.now() - values.lastScrape > 1) {
+      const analysis = await getTwitterAnalysis({
+        accessToken: values.twitter.token,
+        accessTokenSecret: values.twitter.secret,
+        query: values.keywords,
+        since: values.lastScrape,
+      })
+      // Push the new tweets to db
+      const now = Date.now()
+
+      db.ref('/twitterAnalysis').push({
+        ...analysis,
+        dashboard: d,
+        time: now
+      })
+
+      // Mark the latest scrape time to dashboard
+      db.ref('dashboards/' + d).update({
+        lastScrape: now
+      })
+    // }
+    } catch(e) {
+      console.log(e)
+    }
+    return
+  }))
+}
+
+const run = async () => {
+  const db = await loadDB()
+
+  while(true) {
+    // Find all dashboards
+    console.log('Starting jobs')
+    const snap = await db.ref('dashboards/').once('value')
+    const dashboards = snap.val()
+
+    if (dashboards) {
+      console.log(`Scraping ${Object.keys(dashboards).length} dashboards`)
+      await scrape(dashboards, db)
+    } else {
+      console.log('No dashboards to scrape')
+    }
+    console.log('Job done. Going to sleep...')
+    await sleep(5)
+  }
+}
+
+run().catch(error => {
+  console.error(error)
+  process.exit(-1)
+})

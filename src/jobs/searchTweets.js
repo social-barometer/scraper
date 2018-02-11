@@ -7,7 +7,6 @@
  * @typedef {Object} scraperParams
  * @property {String} accessToken – Twitter user access token
  * @property {String} accessTokenSecret – Twitter user access token secret
- * @property {Number} creator_id – ID of the event creator
  * @property {String} query – Search query
  * @property {Number} since – Unix timestamp. The starting point for search.
  */
@@ -21,7 +20,6 @@
  module.exports = async ({
   accessToken,
   accessTokenSecret,
-  creator_id,
   query,
   since,
  }) => {
@@ -31,26 +29,16 @@
      { q: query, count: 100 }
     )
 
-    const analyzed = posts.map(async p => {
-      let analysis
-      try {
-        analysis = await analyze(p.content)
-      } catch(err) {
-        console.log(err)
-        analysis = {
-          sentiment: null,
-          emotion: {
-            anger: null,
-            joy: null,
-            sadness: null,
-            fear: null,
-            disgust: null,
-          }
+    const analyzed = await Promise.all(posts
+      .map(async p => {
+        try {
+          const analysis = await analyze(p.content)
+          return Object.assign(p, analysis)
+        } catch(err) {
+          // Don't return unanalyzed tweets
+          return new Promise(r => r(null))
         }
-      }
-      return Object.assign(p, analysis)
-    })
+      }))
 
-    return Promise.all(analyzed)
-    // TODO: Save to db
+    return analyzed.filter(x => x)
  } 
