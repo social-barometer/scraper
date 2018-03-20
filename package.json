@@ -34,8 +34,7 @@
     "request-promise-native": "^1.0.5",
     "require": "^2.4.20",
     "sentiment": "^4.1.0",
-    "twitter": "^1.7.1",
-    "watson-developer-cloud": "^3.0.3"
+    "twitter": "^1.7.1"
   },
   "devDependencies": {
     "blue-tape": "^1.0.0",

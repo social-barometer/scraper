@@ -1,12 +1,5 @@
-const user = require('../../secrets/secrets.json').IBM.NLUUsername
-const pswd = require('../../secrets/secrets.json').IBM.NLUPassword
-const NLUV1 = require('watson-developer-cloud/natural-language-understanding/v1.js')
-
-const nlu = new NLUV1({
-  'username': user,
-  'password': pswd,
-  'version_date': '2017-02-27'
-})
+const url = 'https://twitter-emotion.herokuapp.com/emotion-analysis'
+const request = require('request-promise-native')
 
 const params = {
   features: {
@@ -24,26 +17,35 @@ const params = {
  * @property {Number} emotion.fear
  * @property {Number} emotion.disgust
  * @property {Number} emotion.anger
- * 
+ *
  */
 
 /**
  * Analyzes given text for sentiment and emotion.
  *
- * @param {String} text – Text to be analyzed
- * @returns {Object.<analysis>} – JSONifiable analysis object
+ * @param {Array.<String>} texts – Array of texts to be analyzed
+ * @returns {Array.<analysis>} – JSONifiable analysis object
  */
-module.exports = (text) =>
-  new Promise((resolve, reject) => {
-    nlu.analyze(Object.assign(params, {text: text}), (err, res) => {
-      err
-        ? reject(err)
-        : resolve(res)
+
+module.exports = (texts) => {
+    return request.post(url, {
+        json: true,
+        body: {
+            tweets: texts
+        }
     })
-  })
-  .then(res => {
-    return {
-      sentiment: res.sentiment.document.score,
-      emotion: res.emotion.document.emotion
-    }
-  })
+}
+// module.exports = (text) =>
+//   new Promise((resolve, reject) => {
+//     nlu.analyze(Object.assign(params, {text: text}), (err, res) => {
+//       err
+//         ? reject(err)
+//         : resolve(res)
+//     })
+//   })
+//   .then(res => {
+//     return {
+//       sentiment: res.sentiment.document.score,
+//       emotion: res.emotion.document.emotion
+//     }
+//   })
