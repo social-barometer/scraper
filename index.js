@@ -2,40 +2,55 @@ const { loadDB } = require('./src/firebase')
 const getTwitterAnalysis = require('./src/jobs/getTwitterAnalysis')
 
 const sleep = (seconds) => new Promise(resolve => {
-  setTimeout(() => resolve(), seconds * 1000)
+  setTimeout(() => resolve(), seconds * 1000)
 })
 
-const scrape =  async (dashboards, db) => {
-  // Loop over them and find scrape tweets
-  return Promise.all(Object.keys(dashboards).map(async d => {
-    const values = dashboards[d]
-    try {
-    // if (Date.now() - values.lastScrape > 1) {
-      const analysis = await getTwitterAnalysis({
-        accessToken: values.twitter.token,
-        accessTokenSecret: values.twitter.secret,
-        query: values.keywords,
-        since: values.lastScrape,
-      })
-      // Push the new tweets to db
-      const now = Date.now()
+const scrape =  async (dashboardsObj, db) => {
+    // Loop over them and find scrape tweets
 
-      db.ref('/twitterAnalysis').push({
-        ...analysis,
-        dashboard: d,
-        time: now
-      })
-
-      // Mark the latest scrape time to dashboard
-      db.ref('dashboards/' + d).update({
-        lastScrape: now
-      })
-    // }
-    } catch(e) {
-      console.log(e)
+    const dashObjToArr = (dashboards) => {
+        return Object.keys(dashboards).map(d => {
+            const dash = dashboards[d]
+            dash['id'] = d
+            return dash
+        })
     }
-    return
-  }))
+    const isScrapeTime = (dashboard) => {
+        const lastScrape = dashboard.lastScrape
+        return !lastScrape || Date.now() - lastScrape > 3.6e6
+    }
+    const dashboards = dashObjToArr(dashboardsObj)
+    const scrapables = dashboards.filter(isScrapeTime)
+
+    console.log(`Scraping ${scrapables.length} dashboards`)
+
+    return Promise.all(scrapables.map(async d => {
+        try {
+            // Scrape if no scrapes done yet or last scrape was a hour ago.
+            const analysis = await getTwitterAnalysis({
+                accessToken: d.twitter.token,
+                accessTokenSecret: d.twitter.secret,
+                query: d.keywords,
+                since: d.lastScrape,
+            })
+            // Push the new tweets to db
+            const now = Date.now()
+
+            db.ref('/twitterAnalysis').push({
+                ...analysis,
+                dashboard: d.id,
+                time: now
+            })
+
+            // Mark the latest scrape time to dashboard
+            db.ref('dashboards/' + d.id).update({
+                lastScrape: now
+            })
+        } catch(e) {
+            console.log(e)
+        }
+        return
+    }))
 }
 
 const run = async () => {
@@ -43,12 +58,12 @@ const run = async () => {
 
   while(true) {
     // Find all dashboards
-    console.log('Starting jobs')
+    console.log('Fetching dashboards')
     const snap = await db.ref('dashboards/').once('value')
     const dashboards = snap.val()
 
     if (dashboards) {
-      console.log(`Scraping ${Object.keys(dashboards).length} dashboards`)
+      console.log(`Found ${Object.keys(dashboards).length} dashboards`)
       await scrape(dashboards, db)
     } else {
       console.log('No dashboards to scrape')
